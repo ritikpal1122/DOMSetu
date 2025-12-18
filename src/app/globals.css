@@ -1,33 +1,126 @@
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* --- LIGHT THEME: "Frost" --- */
+  --bg-app: #F5F7FA;
+  /* Cool, airy gray-blue */
+  --bg-card: #FFFFFF;
+  /* Pure white */
+  --bg-panel: rgba(255, 255, 255, 0.85);
+
+  --text-primary: #1A1D1E;
+  /* Deep Charcoal */
+  --text-secondary: #5A5F6B;
+  /* Slate 600 */
+  --text-tertiary: #949BA5;
+  /* Slate 400 */
+
+  --icon-color: #64748B;
+  /* Slate 500 for non-active icons */
+
+  --bg-secondary: #EBEFF5;
+  /* Very subtle blue-gray for buttons */
+  --bg-tertiary: #F1F4F9;
+
+  --border-light: #E2E8F0;
+  /* Slate 200 */
+  --border-strong: #CBD5E1;
+
+  --input-bg: #FFFFFF;
+  --input-border: #E2E8F0;
+
+  /* Premium Accents - "Electric Indigo" */
+  --accent-primary: #4F46E5;
+  /* Indigo 600 */
+  --accent-hover: #4338CA;
+  --accent-surface: #EEF2FF;
+  /* Indigo 50 */
+  --accent-text: #FFFFFF;
+
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+
+  /* Shadows - "Soft & diffused" */
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -1px rgba(15, 23, 42, 0.03);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.06), 0 4px 6px -2px rgba(15, 23, 42, 0.04);
+
+  --header-height: 64px;
+  --radius-sm: 6px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-pill: 9999px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* --- DARK THEME: "Midnight" --- */
+[data-theme='dark'] {
+  --bg-app: #050505;
+  /* True Black/Deepest Gray */
+  --bg-card: #121212;
+  /* Off-black surface */
+  --bg-panel: rgba(18, 18, 18, 0.8);
 
-html,
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
-}
+  --text-primary: #EDEDEF;
+  /* Soft White */
+  --text-secondary: #A1A1AA;
+  /* Zinc 400 */
+  --text-tertiary: #52525B;
+  /* Zinc 600 */
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  --icon-color: #71717A;
+  /* Zinc 500 */
+
+  --bg-secondary: #1F1F22;
+  /* Rich Dark Gray for buttons */
+  --bg-tertiary: #18181B;
+
+  --border-light: #27272A;
+  /* Zinc 800 */
+  --border-strong: #3F3F46;
+
+  --input-bg: #1A1A1A;
+  /* Dark input background */
+  --input-border: #2E2E2E;
+
+  /* Accents - "Glowing" */
+  --accent-primary: #6366F1;
+  /* Indigo 500 */
+  --accent-hover: #818CF8;
+  --accent-surface: rgba(99, 102, 241, 0.15);
+  --accent-text: #FFFFFF;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 10px 30px -5px rgba(0, 0, 0, 0.5);
 }
 
 * {
   box-sizing: border-box;
   padding: 0;
   margin: 0;
+  border-width: 0;
+  border-style: solid;
+}
+
+body {
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Inter", "Segoe UI", Roboto, sans-serif;
+  line-height: 1.5;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+button {
+  cursor: pointer;
+}
+
+button,
+select,
+input,
+textarea {
+  font-family: inherit;
+  color: inherit;
 }
 
 a {
@@ -35,8 +128,183 @@ a {
   text-decoration: none;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    color-scheme: dark;
+/* Utilities */
+.glass-panel {
+  background: var(--bg-panel);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-light);
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 32px;
+}
+
+/* Typography Scale */
+.h1 {
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  color: var(--text-primary);
+}
+
+.h2 {
+  font-size: 24px;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+}
+
+.h3 {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+}
+
+/* Switch Toggle (Apple Style) */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--bg-secondary);
+  border: 1px solid var(--border-light);
+  transition: .3s;
+  border-radius: 99px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+input:checked+.slider {
+  background-color: var(--accent-primary);
+  border-color: var(--accent-primary);
+}
+
+input:checked+.slider:before {
+  transform: translateX(20px);
+}
+
+/* Dynamic Island Animation */
+@keyframes islandPop {
+  0% {
+    transform: translateX(-50%) scale(0.8);
+    opacity: 0;
+  }
+
+  50% {
+    transform: translateX(-50%) scale(1.05);
+    opacity: 1;
+  }
+
+  100% {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+}
+
+/* Soft Fade In Animation */
+.fade-in {
+  animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  opacity: 0;
+  transform: scale(0.99);
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.99);
+  }
+
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* --- Mobile Responsiveness (Global) --- */
+
+/* 1. Side Navigation (Forms Page) */
+@media (max-width: 1024px) {
+  .side-nav-container {
+    display: none !important;
+  }
+}
+
+/* 2. Layout & Typography (Mobile) */
+@media (max-width: 768px) {
+  .main-container {
+    padding: 40px 20px !important;
+  }
+
+  .h1 {
+    font-size: 28px !important;
+  }
+
+  section {
+    padding: 24px !important;
+  }
+
+  /* Header Optimization */
+  .nav-branding span {
+    display: none !important;
+  }
+
+  .nav-branding {
+    width: auto !important;
+  }
+
+  header {
+    padding: 0 12px !important;
+  }
+
+  .header-controls {
+    gap: 8px !important;
+  }
+
+  .complexity-label {
+    display: none !important;
+  }
+
+  /* Activity Tracker Positioning */
+  .activity-capsule {
+    top: auto !important;
+    bottom: 24px !important;
+    transform: translateX(-50%) !important;
+  }
+}
+
+/* 3. OTP Container (Mobile Narrow) */
+@media (max-width: 480px) {
+  .otp-container {
+    gap: 8px !important;
   }
 }
