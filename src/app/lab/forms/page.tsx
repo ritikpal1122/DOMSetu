@@ -560,7 +560,7 @@ const styles: { [key: string]: React.CSSProperties } = {
     },
     fieldGrid: {
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(min(100%, 240px), 1fr))',
         gap: '24px',
     },
     // Standardized Wrapper for all inputs

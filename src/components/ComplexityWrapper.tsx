@@ -27,7 +27,7 @@ function ShadowContainer({ children, label = "Shadow DOM", theme }: { children: 
 
     return (
         <div style={{
-            padding: '12px',
+            padding: 'var(--wrapper-padding)',
             background: 'var(--bg-tertiary)',
             border: '1px dashed var(--accent-primary)',
             borderRadius: '12px',
@@ -108,7 +108,7 @@ function IFrameContainer({ children, label = "iFrame", theme }: { children: Reac
 
     return (
         <div style={{
-            padding: '12px',
+            padding: 'var(--wrapper-padding)',
             background: 'var(--bg-secondary)',
             border: '1px solid var(--border-light)',
             borderRadius: '12px',
@@ -150,7 +150,7 @@ export default function ComplexityWrapper({ children }: { children: React.ReactN
 
     // Common wrapper
     const OuterWrapper = ({ children }: { children: React.ReactNode }) => (
-        <div className="fade-in" style={{ height: 'calc(100vh - 60px)', padding: '12px', boxSizing: 'border-box' }}>
+        <div className="fade-in" style={{ height: 'calc(100vh - 60px)', padding: 'var(--wrapper-padding)', boxSizing: 'border-box' }}>
             {children}
         </div>
     );

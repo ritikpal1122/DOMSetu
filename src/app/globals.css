@@ -49,6 +49,7 @@
   --radius-md: 12px;
   --radius-lg: 16px;
   --radius-pill: 9999px;
+  --wrapper-padding: 12px;
 }
 
 /* --- DARK THEME: "Midnight" --- */
@@ -269,6 +270,10 @@ input:checked+.slider:before {
     font-size: 28px !important;
   }
 
+  :root {
+    --wrapper-padding: 8px;
+  }
+
   section {
     padding: 24px !important;
   }
@@ -304,6 +309,10 @@ input:checked+.slider:before {
 
 /* 3. OTP Container (Mobile Narrow) */
 @media (max-width: 480px) {
+  :root {
+    --wrapper-padding: 4px;
+  }
+
   .otp-container {
     gap: 8px !important;
   }
