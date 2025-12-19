@@ -5,10 +5,12 @@ import Link from "next/link";
 import { useComplexity } from "@/context/ComplexityContext";
 import { useTheme } from "@/context/ThemeContext";
 import ActivityCapsule from "@/components/ActivityCapsule";
+import LogViewerModal from "@/components/LogViewerModal";
 
 export default function Header() {
     const { mode, setMode } = useComplexity();
     const { theme, toggleTheme } = useTheme();
+    const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
     // Dynamic Width Logic
     const [width, setWidth] = useState(140);
@@ -137,6 +139,33 @@ export default function Header() {
                     </div>
                 </div>
 
+                {/* History Button */}
+                <button
+                    onClick={() => setIsLogModalOpen(true)}
+                    data-testid="view-history-btn"
+                    title="View Activity History"
+                    style={{
+                        height: '40px',
+                        padding: '0 16px',
+                        borderRadius: '99px',
+                        border: '1px solid var(--border-light)',
+                        background: 'var(--bg-secondary)',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
+                        color: 'var(--text-primary)',
+                        transition: 'all 0.2s',
+                        cursor: 'pointer',
+                        fontSize: '14px',
+                        fontWeight: 500,
+                    }}
+                >
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 8l-4 4 4 4" />
+                        <path d="M16 12H8" />
+                        <circle cx="12" cy="12" r="10" />
+                    </svg>
+                    <span className="history-btn-text">Activity History</span>
+                </button>
+
                 {/* Theme Toggle */}
                 <button
                     onClick={toggleTheme}
@@ -156,6 +185,10 @@ export default function Header() {
                     )}
                 </button>
             </div>
+
+            {isLogModalOpen && (
+                <LogViewerModal isOpen={isLogModalOpen} onClose={() => setIsLogModalOpen(false)} />
+            )}
         </header>
     );
 }
