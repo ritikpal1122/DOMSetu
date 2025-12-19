@@ -6,8 +6,36 @@ import ComplexityWrapper from "@/components/ComplexityWrapper";
 import ActivityCapsule from "@/components/ActivityCapsule";
 
 export const metadata: Metadata = {
-    title: "DOMSetu",
-    description: "Advanced playground for testing Kane AI capabilities",
+    title: "DOMSetu | Advanced Automation Playground",
+    description: "An elite playground for testing Kane AI and automation frameworks against complex DOM architectures like Shadow DOM and multi-level iFrames.",
+    keywords: ["Automation", "Kane AI", "Shadow DOM", "iFrame", "Testing", "Playground", "DOMSetu"],
+    openGraph: {
+        title: "DOMSetu | Elite Automation Lab",
+        description: "Test Kane AI against next-gen DOM architectures in a high-density simulator.",
+        url: "https://domsetu.app",
+        siteName: "DOMSetu",
+        images: [
+            {
+                url: "/og-image.png",
+                width: 1200,
+                height: 630,
+                alt: "DOMSetu Advanced Automation Playground",
+            },
+        ],
+        locale: "en_US",
+        type: "website",
+    },
+    twitter: {
+        card: "summary_large_image",
+        title: "DOMSetu | Advanced Automation Lab",
+        description: "The ultimate stress-test for AI automation agents.",
+        images: ["/og-image.png"],
+    },
+    viewport: "width=device-width, initial-scale=1, maximum-scale=5",
+    themeColor: [
+        { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+        { media: "(prefers-color-scheme: dark)", color: "#09090b" },
+    ],
 };
 
 import MouseGlow from "@/components/MouseGlow";
