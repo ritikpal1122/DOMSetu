@@ -45,10 +45,10 @@ export default function Header() {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            padding: '0 24px',
+            // Using max-width constraints on children instead of padding
         }}>
             {/* Left: Branding */}
-            <Link href="/" className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', width: '280px', cursor: 'pointer' }}>
+            <Link href="/" className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', width: '280px', cursor: 'pointer', marginLeft: '24px' }}>
                 <div style={{
                     width: '36px', height: '36px', borderRadius: '10px',
                     background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',
@@ -72,15 +72,12 @@ export default function Header() {
             <ActivityCapsule />
 
             {/* Right: Controls */}
-            <div className="header-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end', flex: 1 }}>
+            <div className="header-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end', flex: 1, marginRight: '24px' }}>
 
                 {/* Dynamic Width Dropdown */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
                     <span className="complexity-label" style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text-secondary)' }}>Complexity:</span>
                     <div style={{ position: 'relative', height: '36px' }}>
-                        <span ref={textMeasureRef} style={{ visibility: 'hidden', position: 'absolute', fontSize: '14px', fontWeight: 500, whiteSpace: 'nowrap' }}>
-                            {getModeLabel(mode)}
-                        </span>
 
                         <div style={{
                             width: `${width}px`,
@@ -89,9 +86,10 @@ export default function Header() {
                             borderRadius: '99px',
                             display: 'flex',
                             alignItems: 'center',
-                            padding: '0 16px',
+                            // padding: '0 16px', // Removed padding as requested
                             transition: 'width 0.3s cubic-bezier(0.2, 0.8, 0.2, 1)',
-                            border: '1px solid var(--border-light)',
+                            // Replace border with box-shadow to prevent layout shifts if children change
+                            boxShadow: 'inset 0 0 0 1px var(--border-light)',
                             overflow: 'hidden',
                             position: 'relative'
                         }}>
@@ -106,8 +104,9 @@ export default function Header() {
                                     height: '100%',
                                     position: 'absolute',
                                     top: 0,
-                                    left: 0,
-                                    padding: '0 16px',
+                                    left: '16px',
+                                    // width: 'calc(100% - 32px)',
+                                    // padding: '0 16px', // Removed padding as requested
                                     fontSize: '14px',
                                     fontWeight: 500,
                                     color: 'var(--text-primary)',
@@ -129,8 +128,7 @@ export default function Header() {
                             </select>
 
                             {/* Visual Label (Behind Select) */}
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', pointerEvents: 'none' }}>
-                                <span style={{ fontSize: '14px', fontWeight: 500, whiteSpace: 'nowrap' }}>{getModeLabel(mode)}</span>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: 'calc(100% - 32px)', pointerEvents: 'none', marginLeft: '16px' }}>
                                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ marginLeft: 8, opacity: 0.5 }}>
                                     <path d="M6 9l6 6 6-6" />
                                 </svg>
@@ -146,9 +144,10 @@ export default function Header() {
                     title="View Activity History"
                     style={{
                         height: '40px',
-                        padding: '0 16px',
+                        width: '150px', // Fixed width instead of padding
+                        // using flex + center to handle content
                         borderRadius: '99px',
-                        border: '1px solid var(--border-light)',
+                        boxShadow: 'inset 0 0 0 1px var(--border-light)',
                         background: 'var(--bg-secondary)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px',
                         color: 'var(--text-primary)',
@@ -171,7 +170,7 @@ export default function Header() {
                     onClick={toggleTheme}
                     style={{
                         width: '40px', height: '40px', borderRadius: '50%',
-                        border: '1px solid var(--border-light)',
+                        boxShadow: 'inset 0 0 0 1px var(--border-light)',
                         background: 'var(--bg-secondary)',
                         display: 'flex', alignItems: 'center', justifyContent: 'center',
                         color: 'var(--text-primary)',

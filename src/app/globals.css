@@ -25,7 +25,9 @@
   --border-strong: #CBD5E1;
 
   --input-bg: #FFFFFF;
-  --input-border: #E2E8F0;
+  --input-bg: #FFFFFF;
+  /* Use box-shadow for borders to prevent layout shifts */
+  --input-border-shadow: inset 0 0 0 1px #E2E8F0;
 
   /* Premium Accents - "Electric Indigo" */
   --accent-primary: #4F46E5;
@@ -80,7 +82,7 @@
 
   --input-bg: #1A1A1A;
   /* Dark input background */
-  --input-border: #2E2E2E;
+  --input-border-shadow: inset 0 0 0 1px #2E2E2E;
 
   /* Accents - "Glowing" */
   --accent-primary: #6366F1;
@@ -98,8 +100,7 @@
   box-sizing: border-box;
   padding: 0;
   margin: 0;
-  border-width: 0;
-  border-style: solid;
+  border: none;
 }
 
 body {
@@ -187,7 +188,7 @@ a {
   right: 0;
   bottom: 0;
   background-color: var(--bg-secondary);
-  border: 1px solid var(--border-light);
+  box-shadow: inset 0 0 0 1px var(--border-light);
   transition: .3s;
   border-radius: 99px;
 }
