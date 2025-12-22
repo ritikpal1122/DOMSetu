@@ -4,7 +4,6 @@ import React, { useState, useRef, useEffect } from "react";
 import Link from "next/link";
 import { useComplexity } from "@/context/ComplexityContext";
 import { useTheme } from "@/context/ThemeContext";
-import ActivityCapsule from "@/components/ActivityCapsule";
 import LogViewerModal from "@/components/LogViewerModal";
 
 export default function Header() {
@@ -68,8 +67,8 @@ export default function Header() {
                 </span>
             </Link>
 
-            {/* Center: Dynamic Island (Absolute Centered) */}
-            <ActivityCapsule />
+            {/* Center: Reserved for global layout positioning */}
+            <div style={{ flex: 1 }} />
 
             {/* Right: Controls */}
             <div className="header-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end', flex: 1, marginRight: '24px' }}>
@@ -96,6 +95,7 @@ export default function Header() {
                             <select
                                 value={mode}
                                 onChange={(e) => setMode(e.target.value as any)}
+                                aria-label="Switch DOM Complexity Mode"
                                 style={{
                                     appearance: 'none',
                                     background: 'transparent',
@@ -142,6 +142,7 @@ export default function Header() {
                     onClick={() => setIsLogModalOpen(true)}
                     data-testid="view-history-btn"
                     title="View Activity History"
+                    aria-label="View Activity History"
                     style={{
                         height: '40px',
                         width: '150px', // Fixed width instead of padding
@@ -168,6 +169,7 @@ export default function Header() {
                 {/* Theme Toggle */}
                 <button
                     onClick={toggleTheme}
+                    aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
                     style={{
                         width: '40px', height: '40px', borderRadius: '50%',
                         boxShadow: 'inset 0 0 0 1px var(--border-light)',

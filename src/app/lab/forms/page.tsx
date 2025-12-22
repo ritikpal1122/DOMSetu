@@ -307,6 +307,7 @@ export default function FormsPage() {
                                     ref={(el) => { inputRefs.current[i] = el; }}
                                     value={d}
                                     maxLength={1}
+                                    aria-label={`OTP Digit ${i + 1}`}
                                     onChange={(e) => handleOtp(i, e.target.value)}
                                     onKeyDown={(e) => handleOtpKeyDown(i, e)}
                                     onFocus={(e) => e.target.placeholder = ''}
@@ -526,10 +527,12 @@ function SideNav() {
 
 
 function Field({ label, type = "text", placeholder, style, log }: any) {
+    const id = React.useId();
     return (
         <div style={{ ...styles.fieldWrapper }}>
-            <label style={styles.label}>{label}</label>
+            <label htmlFor={id} style={styles.label}>{label}</label>
             <input
+                id={id}
                 type={type}
                 placeholder={placeholder}
                 style={{ ...styles.input, ...style }}
