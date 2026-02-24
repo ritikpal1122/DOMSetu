@@ -64,6 +64,20 @@ export default function Home() {
           icon={<ListIcon />}
           onClick={() => handleCardClick("Dropdowns")}
         />
+        <ScenarioCard
+          title="Chrome Prefs Validator"
+          description="Validate Chrome browser preference flags for Kane AI automation runs."
+          href="/chrome-prefs-validator"
+          icon={<ShieldIcon />}
+          onClick={() => handleCardClick("ChromePrefs")}
+        />
+        <ScenarioCard
+          title="Login Checker"
+          description="Trigger Chrome's save password popup for OpenCV assertion."
+          href="/login-checker"
+          icon={<LockIcon />}
+          onClick={() => handleCardClick("LoginChecker")}
+        />
       </div>
     </main>
   );
@@ -127,4 +141,10 @@ const EyeIcon = () => (
 );
 const ListIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="8" y1="6" x2="21" y2="6" /><line x1="8" y1="12" x2="21" y2="12" /><line x1="8" y1="18" x2="21" y2="18" /><line x1="3" y1="6" x2="3.01" y2="6" /><line x1="3" y1="12" x2="3.01" y2="12" /><line x1="3" y1="18" x2="3.01" y2="18" /></svg>
+);
+const ShieldIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" /><path d="M9 12l2 2 4-4" /></svg>
+);
+const LockIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" /><path d="M7 11V7a5 5 0 0 1 10 0v4" /></svg>
 );
