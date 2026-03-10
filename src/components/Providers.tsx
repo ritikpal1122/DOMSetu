@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { Suspense } from "react";
 import { ComplexityProvider } from "@/context/ComplexityContext";
 import { ActivityProvider } from "@/context/ActivityContext";
 import { ThemeProvider } from "@/context/ThemeContext"; // Assuming ThemeProvider is in ThemeContext
@@ -8,11 +8,13 @@ import { ThemeProvider } from "@/context/ThemeContext"; // Assuming ThemeProvide
 export default function Providers({ children }: { children: React.ReactNode }) {
     return (
         <ThemeProvider>
-            <ComplexityProvider>
-                <ActivityProvider>
-                    {children}
-                </ActivityProvider>
-            </ComplexityProvider>
+            <Suspense fallback={null}>
+                <ComplexityProvider>
+                    <ActivityProvider>
+                        {children}
+                    </ActivityProvider>
+                </ComplexityProvider>
+            </Suspense>
         </ThemeProvider>
     );
 }

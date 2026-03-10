@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useComplexity } from "@/context/ComplexityContext";
 import { useTheme } from "@/context/ThemeContext";
 import LogViewerModal from "@/components/LogViewerModal";
+import Navbar from "@/components/Navbar";
 
 export default function Header() {
     const { mode, setMode } = useComplexity();
@@ -46,32 +47,35 @@ export default function Header() {
             justifyContent: 'space-between',
             // Using max-width constraints on children instead of padding
         }}>
-            {/* Left: Branding */}
-            <Link href="/" className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', width: '280px', cursor: 'pointer', marginLeft: '24px' }}>
-                <div style={{
-                    width: '36px', height: '36px', borderRadius: '10px',
-                    background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',
-                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                    color: '#fff', fontWeight: 'bold'
-                }}>
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                        <path d="M4 20h16" />
-                        <path d="M4 14c2-4 9-5 9-5s3 1 7 5" />
-                        <path d="M8 20v-4" />
-                        <path d="M16 20v-4" />
-                        <path d="M12 9v11" />
-                    </svg>
-                </div>
-                <span style={{ fontWeight: 700, fontSize: '22px', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
-                    DOM<span style={{ opacity: 0.5 }}>Setu</span>
-                </span>
-            </Link>
+            {/* Left: Branding + Nav */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '24px' }}>
+                <Navbar />
+                <Link href="/" className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                    <div style={{
+                        width: '36px', height: '36px', borderRadius: '10px',
+                        background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',
+                        display: 'flex', alignItems: 'center', justifyContent: 'center',
+                        color: '#fff', fontWeight: 'bold'
+                    }}>
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                            <path d="M4 20h16" />
+                            <path d="M4 14c2-4 9-5 9-5s3 1 7 5" />
+                            <path d="M8 20v-4" />
+                            <path d="M16 20v-4" />
+                            <path d="M12 9v11" />
+                        </svg>
+                    </div>
+                    <span style={{ fontWeight: 700, fontSize: '22px', letterSpacing: '-0.02em', color: 'var(--text-primary)' }}>
+                        DOM<span style={{ opacity: 0.5 }}>Setu</span>
+                    </span>
+                </Link>
+            </div>
 
-            {/* Center: Reserved for global layout positioning */}
+            {/* Spacer */}
             <div style={{ flex: 1 }} />
 
             {/* Right: Controls */}
-            <div className="header-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end', flex: 1, marginRight: '24px' }}>
+            <div className="header-controls" style={{ display: 'flex', alignItems: 'center', gap: '16px', justifyContent: 'flex-end', marginRight: '24px', flexShrink: 0 }}>
 
                 {/* Dynamic Width Dropdown */}
                 <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
@@ -143,10 +147,10 @@ export default function Header() {
                     data-testid="view-history-btn"
                     title="View Activity History"
                     aria-label="View Activity History"
+                    className="history-btn"
                     style={{
                         height: '40px',
-                        width: '150px', // Fixed width instead of padding
-                        // using flex + center to handle content
+                        padding: '0 16px',
                         borderRadius: '99px',
                         boxShadow: 'inset 0 0 0 1px var(--border-light)',
                         background: 'var(--bg-secondary)',
@@ -156,6 +160,7 @@ export default function Header() {
                         cursor: 'pointer',
                         fontSize: '14px',
                         fontWeight: 500,
+                        flexShrink: 0,
                     }}
                 >
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -169,7 +174,7 @@ export default function Header() {
                 {/* Theme Toggle */}
                 <button
                     onClick={toggleTheme}
-                    aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                    aria-label="Toggle theme"
                     style={{
                         width: '40px', height: '40px', borderRadius: '50%',
                         boxShadow: 'inset 0 0 0 1px var(--border-light)',
@@ -179,11 +184,9 @@ export default function Header() {
                         transition: 'all 0.2s'
                     }}
                 >
-                    {theme === 'light' ? (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
-                    ) : (
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
-                    )}
+                    {/* Both icons rendered; CSS hides the wrong one based on data-theme to avoid hydration mismatch */}
+                    <svg className="theme-icon-light" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="5" /><line x1="12" y1="1" x2="12" y2="3" /><line x1="12" y1="21" x2="12" y2="23" /><line x1="4.22" y1="4.22" x2="5.64" y2="5.64" /><line x1="18.36" y1="18.36" x2="19.78" y2="19.78" /><line x1="1" y1="12" x2="3" y2="12" /><line x1="21" y1="12" x2="23" y2="12" /><line x1="4.22" y1="19.78" x2="5.64" y2="18.36" /><line x1="18.36" y1="5.64" x2="19.78" y2="4.22" /></svg>
+                    <svg className="theme-icon-dark" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" /></svg>
                 </button>
             </div>
 
