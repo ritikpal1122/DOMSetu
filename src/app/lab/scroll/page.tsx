@@ -11,6 +11,9 @@ export default function ScrollPage() {
         clearActivity();
     }, []);
 
+    // Ref for finding the actual scroll container (handles iframe mode)
+    const containerRef = useRef<HTMLDivElement>(null);
+
     // Using a ref to track throttle times to avoid re-renders
     const throttleRef = useRef<{ [key: string]: number }>({});
     const prevScrollRef = useRef<{ [key: string]: number }>({});
@@ -68,22 +71,55 @@ export default function ScrollPage() {
         }, 50); // 50ms pause = "stopped"
     };
 
-    // 1. Window Scroll Tracking
+    // 1. Page Scroll Tracking
+    // In iframe complexity mode, content is rendered inside an iframe via createPortal.
+    // `window` refers to the parent window, but scrolling happens on the iframe's
+    // scroll container (the `iframe-root-content` div with overflow:auto).
+    // We find the actual scrollable ancestor to attach the listener correctly.
     useEffect(() => {
-        const handleWindowScroll = () => {
-            const current = window.scrollY;
-            const max = document.documentElement.scrollHeight - window.innerHeight;
+        const el = containerRef.current;
+        if (!el) return;
+
+        // Walk up from our container to find the nearest scrollable ancestor.
+        // Skip <body> and <html> — page-level scroll events fire on `window`, not on those elements.
+        const getScrollTarget = (): HTMLElement | Window => {
+            const ownerDoc = el.ownerDocument;
+            let parent = el.parentElement;
+            while (parent) {
+                if (parent !== ownerDoc.documentElement && parent !== ownerDoc.body) {
+                    const { overflow, overflowY } = getComputedStyle(parent);
+                    if (/(auto|scroll)/.test(overflow + overflowY)) {
+                        return parent;
+                    }
+                }
+                parent = parent.parentElement;
+            }
+            return ownerDoc?.defaultView || window;
+        };
+
+        const scrollTarget = getScrollTarget();
+
+        const handleScroll = () => {
+            let current: number, max: number;
+            if (scrollTarget instanceof HTMLElement) {
+                current = scrollTarget.scrollTop;
+                max = scrollTarget.scrollHeight - scrollTarget.clientHeight;
+            } else {
+                current = scrollTarget.scrollY;
+                const doc = scrollTarget.document || el.ownerDocument;
+                max = doc.documentElement.scrollHeight - scrollTarget.innerHeight;
+            }
             if (max > 0) {
                 trackScroll('Page', current, max, 'vertical');
             }
         };
 
-        window.addEventListener('scroll', handleWindowScroll);
-        return () => window.removeEventListener('scroll', handleWindowScroll);
+        scrollTarget.addEventListener('scroll', handleScroll);
+        return () => scrollTarget.removeEventListener('scroll', handleScroll);
     }, []);
 
     return (
-        <div className="container fade-in" style={{ padding: "60px 24px", width: '100%', maxWidth: '800px', margin: '0 auto' }}>
+        <div ref={containerRef} className="container fade-in" style={{ padding: "60px 24px", width: '100%', maxWidth: '800px', margin: '0 auto' }}>
 
             <div style={{ marginBottom: 60, textAlign: 'center' }}>
                 <h1 className="h1" style={{ marginBottom: 16 }}>Scroll Dynamics</h1>
