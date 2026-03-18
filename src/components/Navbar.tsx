@@ -4,6 +4,7 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import { createPortal } from "react-dom";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { usePreservedParams } from "@/hooks/usePreservedParams";
 
 const NAV_ITEMS = [
     { label: "Home", href: "/" },
@@ -12,13 +13,14 @@ const NAV_ITEMS = [
     { label: "Alerts", href: "/lab/alerts" },
     { label: "Canvas", href: "/lab/canvas" },
     { label: "Dropdowns", href: "/lab/dropdowns" },
-    { label: "Chrome Prefs", href: "/chrome-prefs-validator" },
+    { label: "Chrome Version", href: "/chrome-prefs-validator" },
     { label: "Login", href: "/login-checker" },
     { label: "E-Commerce", href: "/ecommerce/checkout" },
 ];
 
 export default function Navbar() {
     const pathname = usePathname();
+    const buildHref = usePreservedParams();
     const [open, setOpen] = useState(false);
     const btnRef = useRef<HTMLButtonElement>(null);
     const dropdownRef = useRef<HTMLDivElement>(null);
@@ -93,7 +95,7 @@ export default function Navbar() {
                     {NAV_ITEMS.map(({ label, href }) => (
                         <Link
                             key={href}
-                            href={href}
+                            href={buildHref(href)}
                             className={`hamburger-item ${pathname === href ? 'hamburger-item-active' : ''}`}
                             data-testid={`nav-${label.toLowerCase().replace(/\s+/g, '-')}`}
                         >
