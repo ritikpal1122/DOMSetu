@@ -3,9 +3,11 @@
 import React from "react";
 import Link from "next/link";
 import { useActivity } from "@/context/ActivityContext";
+import { usePreservedParams } from "@/hooks/usePreservedParams";
 
 export default function Home() {
   const { logAction } = useActivity();
+  const buildHref = usePreservedParams();
 
   const handleCardClick = (name: string) => {
     logAction(`Navigated to ${name}`, "Home");
@@ -24,21 +26,21 @@ export default function Home() {
         <ScenarioCard
           title="Form Components"
           description="Input fields, radios, checkboxes, and complex validation states."
-          href="/lab/forms"
+          href={buildHref("/lab/forms")}
           icon={<FormIcon />}
           onClick={() => handleCardClick("Forms")}
         />
         <ScenarioCard
           title="Scroll Dynamics"
           description="Infinite scroll, virtualization, and nested scroll containers."
-          href="/lab/scroll"
+          href={buildHref("/lab/scroll")}
           icon={<ScrollIcon />}
           onClick={() => handleCardClick("Scroll")}
         />
         <ScenarioCard
           title="Alerts & Modals"
           description="System dialogs, custom toasts, and blocking overlays."
-          href="/lab/alerts"
+          href={buildHref("/lab/alerts")}
           icon={<AlertIcon />}
           onClick={() => handleCardClick("Alerts")}
         />
@@ -46,35 +48,35 @@ export default function Home() {
         <ScenarioCard
           title="Canvas & Vision"
           description="Draggable elements and visual assertion targets."
-          href="/lab/canvas"
+          href={buildHref("/lab/canvas")}
           icon={<EyeIcon />}
           onClick={() => handleCardClick("Canvas")}
         />
         <ScenarioCard
           title="Dropdowns & Selects"
           description="Custom search-selects, multi-selects, and native dropdowns."
-          href="/lab/dropdowns"
+          href={buildHref("/lab/dropdowns")}
           icon={<ListIcon />}
           onClick={() => handleCardClick("Dropdowns")}
         />
         <ScenarioCard
-          title="Chrome Prefs Validator"
-          description="Validate Chrome browser preference flags for Kane AI automation runs."
-          href="/chrome-prefs-validator"
+          title="Chrome Version Validator"
+          description="Mirror chrome://version — validate browser info and command-line flags from automation runs."
+          href={buildHref("/chrome-prefs-validator")}
           icon={<ShieldIcon />}
           onClick={() => handleCardClick("ChromePrefs")}
         />
         <ScenarioCard
           title="Login Checker"
           description="Trigger Chrome's save password popup for OpenCV assertion."
-          href="/login-checker"
+          href={buildHref("/login-checker")}
           icon={<LockIcon />}
           onClick={() => handleCardClick("LoginChecker")}
         />
         <ScenarioCard
           title="E-Commerce Checkout"
           description="Complete checkout flow — product browse, cart, shipping, payment, confirmation."
-          href="/ecommerce/checkout"
+          href={buildHref("/ecommerce/checkout")}
           icon={<CartIcon />}
           onClick={() => handleCardClick("Ecommerce")}
         />

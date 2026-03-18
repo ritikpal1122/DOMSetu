@@ -3,6 +3,20 @@
 import React, { useState, useRef, useEffect } from "react";
 
 // ---------------------------------------------------------------------------
+// Global type declaration
+// ---------------------------------------------------------------------------
+declare global {
+    interface Window {
+        loginCheckerState: {
+            state: "login" | "success" | "error";
+            errorMsg: string;
+            validUsername: string;
+            validPassword: string;
+        };
+    }
+}
+
+// ---------------------------------------------------------------------------
 // Constants
 // ---------------------------------------------------------------------------
 const VALID_USERNAME = "Admin";
@@ -59,7 +73,7 @@ export default function LoginChecker() {
 
     // Expose state for CDP
     useEffect(() => {
-        (window as any).loginCheckerState = {
+        window.loginCheckerState = {
             state,
             errorMsg,
             validUsername: VALID_USERNAME,
@@ -152,6 +166,18 @@ export default function LoginChecker() {
                         Log In
                     </button>
                 </form>
+
+                <div style={S.credBox} data-testid="credentials-hint">
+                    <p style={S.credTitle}>Test Credentials</p>
+                    <div style={S.credRow}>
+                        <span style={S.credLabel}>Username:</span>
+                        <code style={S.credValue} data-testid="hint-username">{VALID_USERNAME}</code>
+                    </div>
+                    <div style={S.credRow}>
+                        <span style={S.credLabel}>Password:</span>
+                        <code style={S.credValue} data-testid="hint-password">{VALID_PASSWORD}</code>
+                    </div>
+                </div>
 
                 <div style={S.infoBox}>
                     <p style={S.infoTitle}>How this works</p>
@@ -292,6 +318,43 @@ const S: Record<string, React.CSSProperties> = {
         borderRadius: "var(--radius-sm)",
         width: "100%",
         boxSizing: "border-box" as const,
+    },
+    credBox: {
+        width: "100%",
+        padding: "14px 16px",
+        background: "rgba(99, 102, 241, 0.08)",
+        border: "1px solid rgba(99, 102, 241, 0.2)",
+        borderRadius: "var(--radius-sm)",
+        boxSizing: "border-box" as const,
+        marginTop: 8,
+    },
+    credTitle: {
+        fontSize: 11,
+        fontWeight: 700,
+        color: "var(--accent-primary)",
+        textTransform: "uppercase" as const,
+        letterSpacing: "0.06em",
+        margin: "0 0 10px",
+    },
+    credRow: {
+        display: "flex",
+        alignItems: "center",
+        gap: 8,
+        marginBottom: 4,
+    },
+    credLabel: {
+        fontSize: 13,
+        color: "var(--text-tertiary)",
+        fontWeight: 500,
+        minWidth: 80,
+    },
+    credValue: {
+        fontSize: 13,
+        fontWeight: 600,
+        color: "var(--text-primary)",
+        background: "var(--bg-secondary)",
+        padding: "2px 8px",
+        borderRadius: "var(--radius-sm)",
     },
     infoBox: {
         marginTop: 16,
