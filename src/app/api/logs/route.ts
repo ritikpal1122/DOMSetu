@@ -9,12 +9,13 @@ async function getCollection() {
     return client.db(DB_NAME).collection(COLLECTION);
 }
 
-// GET /api/logs?sessionId=abc123&page=/lab/forms
+// GET /api/logs?sessionId=abc123&page=/lab/forms&stage=staging
 export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const sessionId = searchParams.get("sessionId");
         const page = searchParams.get("page");
+        const stage = searchParams.get("stage");
 
         if (!sessionId) {
             return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
 
         const filter: Record<string, string> = { sessionId };
         if (page) filter.page = page;
+        if (stage) filter.stage = stage;
 
         const collection = await getCollection();
         const logs = await collection.find(filter).sort({ timestamp: 1 }).toArray();
@@ -37,7 +39,7 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { sessionId, page, action, component } = body;
+        const { sessionId, page, action, component, stage } = body;
 
         if (!sessionId || !action) {
             return NextResponse.json(
@@ -52,6 +54,7 @@ export async function POST(request: NextRequest) {
             page: page || "/",
             action,
             component: component || "System",
+            stage: stage || "",
             timestamp: new Date().toISOString(),
         };
 
@@ -64,18 +67,22 @@ export async function POST(request: NextRequest) {
     }
 }
 
-// DELETE /api/logs?sessionId=abc123
+// DELETE /api/logs?sessionId=abc123&stage=staging
 export async function DELETE(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const sessionId = searchParams.get("sessionId");
+        const stage = searchParams.get("stage");
 
         if (!sessionId) {
             return NextResponse.json({ error: "sessionId is required" }, { status: 400 });
         }
 
+        const filter: Record<string, string> = { sessionId };
+        if (stage) filter.stage = stage;
+
         const collection = await getCollection();
-        const result = await collection.deleteMany({ sessionId });
+        const result = await collection.deleteMany(filter);
 
         return NextResponse.json({
             success: true,
