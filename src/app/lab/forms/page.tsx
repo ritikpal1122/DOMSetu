@@ -2,9 +2,11 @@
 
 import React, { useState, useRef } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 export default function FormsPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
     const dialogRef = useRef<HTMLDialogElement>(null);
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [fileSize, setFileSize] = useState<string>("");

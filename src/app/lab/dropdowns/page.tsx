@@ -2,12 +2,14 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Main Page
 // ─────────────────────────────────────────────────────────────────────────────
 export default function DropdownsPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     useEffect(() => { clearActivity(); logAction("Page loaded", "Dropdowns"); }, []);
 

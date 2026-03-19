@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -16,6 +17,7 @@ type ColumnKey = keyof KanbanColumns;
 // ─────────────────────────────────────────────────────────────────────────────
 export default function CanvasPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     useEffect(() => { clearActivity(); logAction("Page loaded", "Canvas"); }, []);
 

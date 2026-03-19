@@ -2,6 +2,7 @@
 
 import React, { useState, useMemo, useEffect, useRef } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -205,6 +206,7 @@ function parseCommandLine(commandLine: string): ParsedFlag[] {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ChromeVersionValidatorPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     const [versionData, setVersionData] = useState<Record<string, string>>(EMPTY_VERSION_DATA);
     const [commandLineInput, setCommandLineInput] = useState("");
