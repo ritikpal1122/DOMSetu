@@ -37,6 +37,11 @@ function getCurrentPage(): string {
     return window.location.pathname;
 }
 
+function getStage(): string {
+    if (typeof window === "undefined") return "";
+    return localStorage.getItem("stage") || "";
+}
+
 export function ActivityProvider({ children }: { children: React.ReactNode }) {
     const [lastEvent, setLastEvent] = useState<ActivityEvent | null>(null);
 
@@ -86,6 +91,7 @@ export function ActivityProvider({ children }: { children: React.ReactNode }) {
                     page: getCurrentPage(),
                     action: message,
                     component: source,
+                    stage: getStage(),
                 }),
             }).catch((err) => {
                 console.warn("Failed to persist activity log:", err);
