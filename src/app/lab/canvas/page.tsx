@@ -17,7 +17,7 @@ type ColumnKey = keyof KanbanColumns;
 export default function CanvasPage() {
     const { logAction, clearActivity } = useActivity();
 
-    useEffect(() => { clearActivity(); }, []);
+    useEffect(() => { clearActivity(); logAction("Page loaded", "Canvas"); }, []);
 
     const log = (msg: string) => logAction(msg, "Canvas & Vision");
 
@@ -215,7 +215,14 @@ function KanbanBoard({ log }: { log: (msg: string) => void }) {
             <p className="body-sm" style={{ marginBottom: '16px', color: 'var(--text-secondary)' }}>
                 Drag cards between columns to change their status.
             </p>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+            <style jsx global>{`
+                @media (max-width: 768px) {
+                    .kanban-grid {
+                        grid-template-columns: 1fr !important;
+                    }
+                }
+            `}</style>
+            <div className="kanban-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
                 {(Object.keys(columns) as ColumnKey[]).map(col => (
                     <div
                         key={col}
@@ -226,7 +233,7 @@ function KanbanBoard({ log }: { log: (msg: string) => void }) {
                             background: 'var(--bg-tertiary)',
                             borderRadius: '14px',
                             padding: '16px',
-                            minHeight: '200px',
+                            minHeight: '150px',
                             border: '1px dashed var(--border-light)',
                         }}
                     >

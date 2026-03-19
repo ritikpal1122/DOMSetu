@@ -9,6 +9,7 @@ export default function AlertsPage() {
     // Clear activity on mount
     useEffect(() => {
         clearActivity();
+        logAction("Page loaded", "Alerts");
     }, []);
 
     // State for Custom Modals

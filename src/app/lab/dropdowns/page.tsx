@@ -9,7 +9,7 @@ import { useActivity } from "@/context/ActivityContext";
 export default function DropdownsPage() {
     const { logAction, clearActivity } = useActivity();
 
-    useEffect(() => { clearActivity(); }, []);
+    useEffect(() => { clearActivity(); logAction("Page loaded", "Dropdowns"); }, []);
 
     const log = (msg: string) => logAction(msg, "Dropdowns");
 

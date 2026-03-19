@@ -254,8 +254,8 @@ input:checked+.slider:before {
 
 /* --- Mobile Responsiveness (Global) --- */
 
-/* 1. Side Navigation (Forms Page) */
-@media (max-width: 1024px) {
+/* 1. Side Navigation — hide when viewport is too narrow to avoid overlapping content */
+@media (max-width: 1280px) {
   .side-nav-container {
     display: none !important;
   }

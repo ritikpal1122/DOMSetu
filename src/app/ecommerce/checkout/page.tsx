@@ -128,8 +128,13 @@ function Stars({ rating }: { rating: number }) {
 // Main Page Component
 // ─────────────────────────────────────────────────────────────────────────────
 export default function EcommerceCheckoutPage() {
-    const { logAction } = useActivity();
+    const { logAction, clearActivity } = useActivity();
     const log = (msg: string) => logAction(msg, "Ecommerce");
+
+    useEffect(() => {
+        clearActivity();
+        logAction("Page loaded", "Ecommerce");
+    }, []);
 
     const [step, setStep] = useState<Step>("products");
     const [cart, setCart] = useState<CartItem[]>([]);

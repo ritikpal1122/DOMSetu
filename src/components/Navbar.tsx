@@ -16,6 +16,7 @@ const NAV_ITEMS = [
     { label: "Chrome Version", href: "/chrome-prefs-validator" },
     { label: "Login", href: "/login-checker" },
     { label: "E-Commerce", href: "/ecommerce/checkout" },
+    { label: "Autoheal", href: "/lab/autoheal" },
 ];
 
 export default function Navbar() {
