@@ -6,10 +6,12 @@ import { useComplexity } from "@/context/ComplexityContext";
 import { useTheme } from "@/context/ThemeContext";
 import LogViewerModal from "@/components/LogViewerModal";
 import Navbar from "@/components/Navbar";
+import { usePreservedParams } from "@/hooks/usePreservedParams";
 
 export default function Header() {
     const { mode, setMode } = useComplexity();
     const { theme, toggleTheme } = useTheme();
+    const buildHref = usePreservedParams();
     const [isLogModalOpen, setIsLogModalOpen] = useState(false);
 
     // Dynamic Width Logic
@@ -50,7 +52,7 @@ export default function Header() {
             {/* Left: Branding + Nav */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginLeft: '24px' }}>
                 <Navbar />
-                <Link href="/" className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
+                <Link href={buildHref("/")} className="nav-branding" style={{ textDecoration: 'none', display: 'flex', alignItems: 'center', gap: '12px', cursor: 'pointer' }}>
                     <div style={{
                         width: '36px', height: '36px', borderRadius: '10px',
                         background: 'linear-gradient(135deg, var(--accent-primary), var(--accent-hover))',

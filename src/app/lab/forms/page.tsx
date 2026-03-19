@@ -13,9 +13,10 @@ export default function FormsPage() {
     // Clear activity on mount for test isolation
     React.useEffect(() => {
         clearActivity();
+        logAction("Page loaded", "Forms");
     }, []);
 
-    const log = (msg: string) => logAction(msg, "Native Lab");
+    const log = (msg: string) => logAction(msg, "Forms");
 
     const handleReset = () => {
         setOtp(["", "", "", "", "", ""]);
@@ -300,7 +301,7 @@ export default function FormsPage() {
                             <p className="body-sm">Enter the 6-digit code sent to your device.</p>
                         </div>
 
-                        <div className="otp-container" style={{ display: 'flex', gap: 12, justifyContent: 'center' }}>
+                        <div className="otp-container" style={{ display: 'flex', gap: 8, justifyContent: 'center', flexWrap: 'wrap', maxWidth: '100%' }}>
                             {otp.map((d, i) => (
                                 <input
                                     key={i}
@@ -671,11 +672,13 @@ const styles: { [key: string]: React.CSSProperties } = {
         width: '100%',
     },
     otpInput: {
-        flex: 1,
+        width: '3rem',
+        minWidth: '2.5rem',
         maxWidth: '3.5rem',
+        flex: '1 1 2.5rem',
         aspectRatio: '1 / 1.15',
         fontSize: '1.5rem',
-        textAlign: 'center',
+        textAlign: 'center' as const,
         borderRadius: '0.75rem',
         boxShadow: 'inset 0 0 0 1px var(--border-strong)',
         border: 'none',
@@ -684,6 +687,7 @@ const styles: { [key: string]: React.CSSProperties } = {
         outline: 'none',
         fontWeight: 600,
         transition: 'border-color 0.2s, box-shadow 0.2s',
+        boxSizing: 'border-box' as const,
     },
     btnPrimary: {
         background: 'var(--accent-primary)',

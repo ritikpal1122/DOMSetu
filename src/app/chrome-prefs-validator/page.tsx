@@ -204,7 +204,7 @@ function parseCommandLine(commandLine: string): ParsedFlag[] {
 // Main Component
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ChromeVersionValidatorPage() {
-    const { logAction } = useActivity();
+    const { logAction, clearActivity } = useActivity();
 
     const [versionData, setVersionData] = useState<Record<string, string>>(EMPTY_VERSION_DATA);
     const [commandLineInput, setCommandLineInput] = useState("");
@@ -308,7 +308,9 @@ export default function ChromeVersionValidatorPage() {
 
         detectedDataRef.current = detected;
         setVersionData(detected);
-        logAction(`Auto-detected ${name} version info`, "ChromeVersionValidator");
+        clearActivity();
+        logAction("Page loaded", "ChromePrefs");
+        logAction(`Auto-detected ${name} version info`, "ChromePrefs");
     // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

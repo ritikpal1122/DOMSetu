@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useRef, useEffect } from "react";
+import { useActivity } from "@/context/ActivityContext";
 
 // ---------------------------------------------------------------------------
 // Global type declaration
@@ -26,14 +27,17 @@ const VALID_PASSWORD = "Admin@LT1234";
 // Main Component
 // ---------------------------------------------------------------------------
 export default function LoginChecker() {
+    const { logAction, clearActivity } = useActivity();
     const [state, setState] = useState<"login" | "success" | "error">("login");
     const [errorMsg, setErrorMsg] = useState("");
     const formRef = useRef<HTMLFormElement>(null);
     const usernameRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
-    // Focus username on mount
+    // Clear activity and focus username on mount
     useEffect(() => {
+        clearActivity();
+        logAction("Page loaded", "LoginChecker");
         usernameRef.current?.focus();
     }, []);
 
@@ -44,18 +48,13 @@ export default function LoginChecker() {
 
         if (username === VALID_USERNAME && password === VALID_PASSWORD) {
             setErrorMsg("");
-            // Trigger Chrome's save password popup by performing a navigation-like state change.
-            // Chrome detects successful login when:
-            //   1. A form with autocomplete username + password fields is submitted
-            //   2. The page transitions (we simulate by changing state)
-            //
-            // However, the MOST reliable trigger is an actual page navigation.
-            // We use history.pushState + state change to simulate this.
             window.history.pushState({}, "", "/login-checker?success=true");
             setState("success");
+            logAction("Login successful", "LoginChecker");
         } else {
             setErrorMsg("Invalid credentials. Please try again.");
             setState("error");
+            logAction("Login failed — invalid credentials", "LoginChecker");
         }
     };
 
@@ -63,6 +62,7 @@ export default function LoginChecker() {
         window.history.pushState({}, "", "/login-checker");
         setState("login");
         setErrorMsg("");
+        logAction("Logged out", "LoginChecker");
         // Reset form values so Chrome detects fresh inputs next time
         setTimeout(() => {
             if (usernameRef.current) usernameRef.current.value = "";

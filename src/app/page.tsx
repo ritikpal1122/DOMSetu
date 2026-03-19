@@ -1,13 +1,18 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import Link from "next/link";
 import { useActivity } from "@/context/ActivityContext";
 import { usePreservedParams } from "@/hooks/usePreservedParams";
 
 export default function Home() {
-  const { logAction } = useActivity();
+  const { logAction, clearActivity } = useActivity();
   const buildHref = usePreservedParams();
+
+  useEffect(() => {
+    clearActivity();
+    logAction("Page loaded", "Home");
+  }, []);
 
   const handleCardClick = (name: string) => {
     logAction(`Navigated to ${name}`, "Home");
@@ -60,11 +65,11 @@ export default function Home() {
           onClick={() => handleCardClick("Dropdowns")}
         />
         <ScenarioCard
-          title="Chrome Version Validator"
-          description="Mirror chrome://version — validate browser info and command-line flags from automation runs."
-          href={buildHref("/chrome-prefs-validator")}
-          icon={<ShieldIcon />}
-          onClick={() => handleCardClick("ChromePrefs")}
+          title="Dynamic Elements"
+          description="Randomized table cells and list items — test autoheal against shuffled DOM positions."
+          href={buildHref("/lab/autoheal")}
+          icon={<ShuffleIcon />}
+          onClick={() => handleCardClick("Autoheal")}
         />
         <ScenarioCard
           title="Login Checker"
@@ -79,6 +84,13 @@ export default function Home() {
           href={buildHref("/ecommerce/checkout")}
           icon={<CartIcon />}
           onClick={() => handleCardClick("Ecommerce")}
+        />
+        <ScenarioCard
+          title="Chrome Version Validator"
+          description="Mirror chrome://version — validate browser info and command-line flags from automation runs."
+          href={buildHref("/chrome-prefs-validator")}
+          icon={<ShieldIcon />}
+          onClick={() => handleCardClick("ChromePrefs")}
         />
       </div>
     </main>
@@ -152,4 +164,7 @@ const LockIcon = () => (
 );
 const CartIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="9" cy="21" r="1" /><circle cx="20" cy="21" r="1" /><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" /></svg>
+);
+const ShuffleIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
 );

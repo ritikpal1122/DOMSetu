@@ -9,6 +9,7 @@ export default function ScrollPage() {
     // Clear activity on mount
     useEffect(() => {
         clearActivity();
+        logAction("Page loaded", "Scroll");
     }, []);
 
     // Ref for finding the actual scroll container (handles iframe mode)
