@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Types
@@ -129,6 +130,7 @@ function Stars({ rating }: { rating: number }) {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function EcommerceCheckoutPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
     const log = (msg: string) => logAction(msg, "Ecommerce");
 
     useEffect(() => {

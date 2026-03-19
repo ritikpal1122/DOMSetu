@@ -2,9 +2,11 @@
 
 import React, { useState, useEffect } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 export default function AlertsPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     // Clear activity on mount
     useEffect(() => {
@@ -95,7 +97,7 @@ export default function AlertsPage() {
             <div style={{ display: 'grid', gap: '60px' }}>
 
                 {/* 1. System Dialogs */}
-                <section style={styles.section}>
+                <section id="section-dialogs" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">1. System Dialogs</h2>
                         <span style={styles.badge}>Blocking</span>
@@ -117,7 +119,7 @@ export default function AlertsPage() {
                 </section>
 
                 {/* 2. Custom Modals */}
-                <section style={styles.section}>
+                <section id="section-modals" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">2. Custom Modals</h2>
                         <span style={styles.badge}>Overlays</span>
@@ -165,7 +167,7 @@ export default function AlertsPage() {
                 </section>
 
                 {/* 3. Toast Notifications */}
-                <section style={styles.section}>
+                <section id="section-toasts" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">3. Toasts</h2>
                         <span style={styles.badge}>Ephemeral</span>

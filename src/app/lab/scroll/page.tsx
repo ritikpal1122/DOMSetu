@@ -2,9 +2,11 @@
 
 import React, { useRef, useEffect, useState } from 'react';
 import { useActivity } from '@/context/ActivityContext';
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 export default function ScrollPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     // Clear activity on mount
     useEffect(() => {
@@ -132,7 +134,7 @@ export default function ScrollPage() {
             <div style={{ display: 'grid', gap: '60px', width: '100%' }}>
 
                 {/* 1. Main Page Scroll Indicator */}
-                <section style={styles.section}>
+                <section id="section-page-scroll" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">1. Page Scroll</h2>
                         <span style={styles.badge}>Vertical</span>
@@ -154,7 +156,7 @@ export default function ScrollPage() {
                 </section>
 
                 {/* 2. Nested Scroll Section */}
-                <section style={styles.section}>
+                <section id="section-nested" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">2. Nested Container Scroll</h2>
                         <span style={styles.badge}>Overflow-Y</span>
@@ -201,7 +203,7 @@ export default function ScrollPage() {
                 </section>
 
                 {/* 3. Product Carousel */}
-                <section style={styles.section}>
+                <section id="section-carousel" style={styles.section}>
                     <div style={styles.header}>
                         <h2 className="h2">3. Product Carousel</h2>
                         <span style={styles.badge}>Horizontal</span>

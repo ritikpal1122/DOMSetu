@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useActivity } from "@/context/ActivityContext";
+import { useScrollToHash } from "@/hooks/useScrollToHash";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Data
@@ -42,6 +43,7 @@ function generateCellLabels(size: number): string[] {
 // ─────────────────────────────────────────────────────────────────────────────
 export default function AutohealPage() {
     const { logAction, clearActivity } = useActivity();
+    useScrollToHash();
 
     const [tableSize, setTableSize] = useState<TableSize>(5);
     const [cells, setCells] = useState<string[]>([]);
