@@ -39,7 +39,7 @@ function getCurrentPage(): string {
 
 function getStage(): string {
     if (typeof window === "undefined") return "";
-    return localStorage.getItem("stage") || "";
+    return new URLSearchParams(window.location.search).get("stage") || "";
 }
 
 export function ActivityProvider({ children }: { children: React.ReactNode }) {
