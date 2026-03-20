@@ -17,6 +17,7 @@ const NAV_ITEMS = [
     { label: "Login", href: "/login-checker" },
     { label: "E-Commerce", href: "/ecommerce/checkout" },
     { label: "Autoheal", href: "/lab/autoheal" },
+    { label: "Device Settings", href: "/device-settings" },
 ];
 
 export default function Navbar() {
