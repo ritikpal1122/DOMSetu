@@ -261,7 +261,14 @@ input:checked+.slider:before {
   }
 }
 
-/* 2. Layout & Typography (Mobile) */
+/* 2. Activity Capsule — hide on mobile to prevent click interception */
+@media (max-width: 768px) {
+  .activity-capsule {
+    display: none !important;
+  }
+}
+
+/* 3. Layout & Typography (Mobile) */
 @media (max-width: 768px) {
   .main-container {
     padding: 40px 20px !important;
