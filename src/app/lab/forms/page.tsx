@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useActivity } from "@/context/ActivityContext";
 import { useScrollToHash } from "@/hooks/useScrollToHash";
 
@@ -11,6 +11,80 @@ export default function FormsPage() {
     const [otp, setOtp] = useState(["", "", "", "", "", ""]);
     const [fileSize, setFileSize] = useState<string>("");
     const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+
+    // TOTP state
+    const [totpSecret, setTotpSecret] = useState<string>("");
+    const [totpCode, setTotpCode] = useState<string>("");
+    const [totpInput, setTotpInput] = useState<string>("");
+    const [totpTimeLeft, setTotpTimeLeft] = useState<number>(30);
+    const [totpResult, setTotpResult] = useState<{ valid: boolean; message: string } | null>(null);
+    const [totpHistory, setTotpHistory] = useState<string[]>([]);
+
+    // Generate a random base32-like secret
+    const generateSecret = useCallback(() => {
+        const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
+        let secret = "";
+        for (let i = 0; i < 16; i++) {
+            secret += chars[Math.floor(Math.random() * chars.length)];
+        }
+        return secret;
+    }, []);
+
+    // Simple TOTP-like code generation (deterministic from secret + time window)
+    const generateCode = useCallback((secret: string, timeStep: number): string => {
+        let hash = 0;
+        const input = secret + timeStep.toString();
+        for (let i = 0; i < input.length; i++) {
+            const char = input.charCodeAt(i);
+            hash = ((hash << 5) - hash + char) | 0;
+        }
+        const code = (Math.abs(hash) % 1000000).toString().padStart(6, "0");
+        return code;
+    }, []);
+
+    // Initialize secret on mount
+    useEffect(() => {
+        const secret = generateSecret();
+        setTotpSecret(secret);
+        const timeStep = Math.floor(Date.now() / 30000);
+        setTotpCode(generateCode(secret, timeStep));
+    }, [generateSecret, generateCode]);
+
+    // TOTP countdown timer
+    useEffect(() => {
+        if (!totpSecret) return;
+        const tick = () => {
+            const now = Date.now();
+            const timeStep = Math.floor(now / 30000);
+            const remaining = 30 - Math.floor((now % 30000) / 1000);
+            setTotpTimeLeft(remaining);
+            setTotpCode(generateCode(totpSecret, timeStep));
+        };
+        tick();
+        const interval = setInterval(tick, 1000);
+        return () => clearInterval(interval);
+    }, [totpSecret, generateCode]);
+
+    const handleTotpVerify = () => {
+        if (!totpInput.trim()) return;
+        const isValid = totpInput === totpCode;
+        const result = {
+            valid: isValid,
+            message: isValid ? "Code verified successfully!" : "Invalid code. Please try again."
+        };
+        setTotpResult(result);
+        setTotpHistory(prev => [`${totpInput} — ${isValid ? "Valid" : "Invalid"} (${new Date().toLocaleTimeString()})`, ...prev].slice(0, 5));
+        log(`TOTP Verify: ${totpInput} → ${isValid ? "Valid" : "Invalid"}`);
+    };
+
+    const handleTotpRegenerate = () => {
+        const secret = generateSecret();
+        setTotpSecret(secret);
+        setTotpInput("");
+        setTotpResult(null);
+        setTotpHistory([]);
+        log("TOTP Secret Regenerated");
+    };
 
     // Clear activity on mount for test isolation
     React.useEffect(() => {
@@ -23,6 +97,9 @@ export default function FormsPage() {
     const handleReset = () => {
         setOtp(["", "", "", "", "", ""]);
         setFileSize("");
+        setTotpInput("");
+        setTotpResult(null);
+        setTotpHistory([]);
         clearActivity();
         log("Form Reset");
     };
@@ -74,7 +151,7 @@ export default function FormsPage() {
                 <form id="lab-form" style={styles.grid} onReset={handleReset} onSubmit={(e) => e.preventDefault()}>
 
                     {/* SECTION 1: Text Inputs */}
-                    <section id="section-1" style={styles.section}>
+                    <section id="text-inputs" style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 className="h2">1. Text Inputs</h2>
                             <div style={styles.badge}>Core</div>
@@ -98,7 +175,7 @@ export default function FormsPage() {
                     </section>
 
                     {/* SECTION 2: Selection */}
-                    <section id="section-2" style={styles.section}>
+                    <section id="selection-controls" style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 className="h2">2. Selection Controls</h2>
                             <div style={styles.badge}>Interactive</div>
@@ -169,7 +246,7 @@ export default function FormsPage() {
                     </section>
 
                     {/* SECTION 3: Date & Time */}
-                    <section id="section-3" style={styles.section}>
+                    <section id="date-time" style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 className="h2">3. Date & Time</h2>
                             <div style={styles.badge}>Pickers</div>
@@ -184,7 +261,7 @@ export default function FormsPage() {
                     </section>
 
                     {/* SECTION 4: Special & Interactive */}
-                    <section id="section-4" style={styles.section}>
+                    <section id="interactive-special" style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 className="h2">4. Interactive & Special</h2>
                             <div style={styles.badge}>Advanced</div>
@@ -296,7 +373,7 @@ export default function FormsPage() {
                     </section>
 
                     {/* SECTION 5: OTP */}
-                    <section id="section-5" style={{ ...styles.section, border: '1px solid var(--accent-primary)', background: 'var(--bg-tertiary)', position: 'relative', overflow: 'hidden' }}>
+                    <section id="otp-verification" style={{ ...styles.section, border: '1px solid var(--accent-primary)', background: 'var(--bg-tertiary)', position: 'relative', overflow: 'hidden' }}>
                         <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 4, background: 'var(--accent-primary)' }}></div>
                         <div style={{ textAlign: 'center', marginBottom: 24 }}>
                             <h2 className="h2" style={{ color: 'var(--text-primary)' }}>5. OTP Verification</h2>
@@ -326,7 +403,7 @@ export default function FormsPage() {
                     </section>
 
                     {/* SECTION 6: Links & Vectors */}
-                    <section id="section-6" style={styles.section}>
+                    <section id="links-vectors" style={styles.section}>
                         <div style={styles.sectionHeader}>
                             <h2 className="h2">6. Links & Vectors</h2>
                             <div style={styles.badge}>Navigation</div>
@@ -381,8 +458,251 @@ export default function FormsPage() {
                         </div>
                     </section>
 
+                    {/* SECTION 7: TOTP Validator */}
+                    <section id="totp-validator" style={{ ...styles.section, border: '1px solid var(--accent-primary)', position: 'relative', overflow: 'hidden' }}>
+                        <div style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: 4, background: 'linear-gradient(90deg, var(--accent-primary), var(--accent-secondary, #f59e0b))' }}></div>
+                        <div style={styles.sectionHeader}>
+                            <h2 className="h2">7. TOTP Validator</h2>
+                            <div style={{ ...styles.badge, background: 'var(--accent-primary)', color: '#fff' }}>Auth</div>
+                        </div>
+
+                        <div className="totp-inner" style={{ width: 'calc(100% - 4rem)', margin: '0 auto', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+                            {/* Secret Display */}
+                            <div style={styles.fieldWrapper}>
+                                <label style={styles.label}>Secret Key</label>
+                                <div data-testid="totp-secret-display" style={{
+                                    display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap'
+                                }}>
+                                    <code data-testid="totp-secret-value" className="totp-secret-code" style={{
+                                        fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 700,
+                                        letterSpacing: '0.15em', color: 'var(--text-primary)',
+                                        background: 'var(--bg-secondary)', borderRadius: '0.5rem',
+                                        padding: '0.625rem 1rem',
+                                        boxShadow: 'inset 0 0 0 1px var(--border-light)',
+                                        wordBreak: 'break-all'
+                                    }}>
+                                        {totpSecret.replace(/(.{4})/g, '$1 ').trim()}
+                                    </code>
+                                    <button
+                                        type="button"
+                                        data-testid="totp-regenerate-btn"
+                                        style={{ ...styles.btnSecondary, marginTop: 0, minWidth: 'auto', padding: '0 0.75rem', height: '2.25rem', fontSize: '0.75rem' }}
+                                        onClick={handleTotpRegenerate}
+                                    >
+                                        Regenerate
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Code + Timer Display */}
+                            <div className="totp-code-timer-grid" style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 14rem), 1fr))',
+                                gap: '1.5rem'
+                            }}>
+                                {/* Current Code */}
+                                <div className="totp-code-card" style={{
+                                    background: 'var(--bg-secondary)', borderRadius: '0.75rem',
+                                    padding: '1.25rem', textAlign: 'center',
+                                    boxShadow: 'inset 0 0 0 1px var(--border-light)',
+                                    display: 'flex', flexDirection: 'column', gap: '0.5rem', alignItems: 'center'
+                                }}>
+                                    <span style={{ fontSize: '0.6875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-tertiary)' }}>
+                                        Current Code
+                                    </span>
+                                    <span data-testid="totp-current-code" className="totp-code-value" style={{
+                                        fontFamily: 'monospace', fontSize: '2rem', fontWeight: 800,
+                                        letterSpacing: '0.3em', color: 'var(--accent-primary)'
+                                    }}>
+                                        {totpCode}
+                                    </span>
+                                </div>
+
+                                {/* Timer */}
+                                <div className="totp-timer-card" style={{
+                                    background: 'var(--bg-secondary)', borderRadius: '0.75rem',
+                                    padding: '1.25rem', textAlign: 'center',
+                                    boxShadow: 'inset 0 0 0 1px var(--border-light)',
+                                    display: 'flex', flexDirection: 'column', gap: '0.75rem', alignItems: 'center'
+                                }}>
+                                    <span style={{ fontSize: '0.6875rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--text-tertiary)' }}>
+                                        Expires In
+                                    </span>
+                                    <div className="totp-timer-ring-wrapper" style={{ position: 'relative', width: '3.5rem', height: '3.5rem' }}>
+                                        <svg width="56" height="56" viewBox="0 0 56 56" style={{ transform: 'rotate(-90deg)' }}>
+                                            <circle cx="28" cy="28" r="24" fill="none" stroke="var(--border-light)" strokeWidth="4" />
+                                            <circle
+                                                data-testid="totp-timer-ring"
+                                                cx="28" cy="28" r="24" fill="none"
+                                                stroke={totpTimeLeft <= 5 ? '#ef4444' : 'var(--accent-primary)'}
+                                                strokeWidth="4" strokeLinecap="round"
+                                                strokeDasharray={`${(totpTimeLeft / 30) * 150.8} 150.8`}
+                                                style={{ transition: 'stroke-dasharray 1s linear, stroke 0.3s' }}
+                                            />
+                                        </svg>
+                                        <span data-testid="totp-timer-value" className="totp-timer-text" style={{
+                                            position: 'absolute', inset: 0,
+                                            display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                            fontFamily: 'monospace', fontSize: '1.1rem', fontWeight: 800,
+                                            color: totpTimeLeft <= 5 ? '#ef4444' : 'var(--text-primary)'
+                                        }}>
+                                            {totpTimeLeft}s
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {/* Input + Verify */}
+                            <div style={styles.fieldWrapper}>
+                                <label style={styles.label}>Enter TOTP Code</label>
+                                <div className="totp-input-row" style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                                    <input
+                                        data-testid="totp-input"
+                                        className="totp-input-field"
+                                        type="text"
+                                        inputMode="numeric"
+                                        maxLength={6}
+                                        value={totpInput}
+                                        placeholder="000000"
+                                        onChange={(e) => {
+                                            const val = e.target.value.replace(/\D/g, '').slice(0, 6);
+                                            setTotpInput(val);
+                                            setTotpResult(null);
+                                            log(`TOTP Input: ${val}`);
+                                        }}
+                                        onKeyDown={(e) => { if (e.key === 'Enter') handleTotpVerify(); }}
+                                        style={{
+                                            ...styles.input,
+                                            fontFamily: 'monospace', fontSize: '1.25rem', fontWeight: 700,
+                                            letterSpacing: '0.3em', textAlign: 'center',
+                                            flex: '1 1 10rem', minWidth: '10rem', maxWidth: '16rem'
+                                        }}
+                                    />
+                                    <button
+                                        type="button"
+                                        data-testid="totp-verify-btn"
+                                        style={{ ...styles.btnPrimary, flex: '0 0 auto' }}
+                                        onClick={handleTotpVerify}
+                                    >
+                                        Verify
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* Result */}
+                            {totpResult && (
+                                <div
+                                    data-testid="totp-result"
+                                    className="fade-in totp-result-bar"
+                                    style={{
+                                        display: 'flex', alignItems: 'center', gap: '0.75rem',
+                                        padding: '0.875rem 1rem', borderRadius: '0.5rem',
+                                        background: totpResult.valid ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                                        boxShadow: `inset 0 0 0 1px ${totpResult.valid ? 'rgba(34, 197, 94, 0.3)' : 'rgba(239, 68, 68, 0.3)'}`,
+                                    }}
+                                >
+                                    <span className="totp-result-icon" style={{ fontSize: '1.25rem' }}>{totpResult.valid ? '✓' : '✗'}</span>
+                                    <span data-testid="totp-result-message" className="totp-result-text" style={{
+                                        fontSize: '0.875rem', fontWeight: 600,
+                                        color: totpResult.valid ? '#22c55e' : '#ef4444'
+                                    }}>
+                                        {totpResult.message}
+                                    </span>
+                                </div>
+                            )}
+
+                            {/* History */}
+                            {totpHistory.length > 0 && (
+                                <div style={styles.fieldWrapper}>
+                                    <label style={styles.label}>Recent Attempts</label>
+                                    <div data-testid="totp-history" style={{
+                                        display: 'flex', flexDirection: 'column', gap: '0.375rem'
+                                    }}>
+                                        {totpHistory.map((entry, i) => (
+                                            <div key={i} data-testid={`totp-history-${i}`} className="totp-history-entry" style={{
+                                                fontFamily: 'monospace', fontSize: '0.8rem',
+                                                color: 'var(--text-secondary)',
+                                                padding: '0.375rem 0.75rem',
+                                                background: 'var(--bg-secondary)', borderRadius: '0.375rem',
+                                                boxShadow: 'inset 0 0 0 1px var(--border-light)'
+                                            }}>
+                                                {entry}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </section>
+
                 </form>
             </div>
+
+            {/* TOTP responsive styles */}
+            <style jsx global>{`
+                @media (max-width: 768px) {
+                    #totp-validator {
+                        padding-top: 1rem !important;
+                        padding-bottom: 1rem !important;
+                        gap: 1rem !important;
+                    }
+                    #totp-validator .totp-inner {
+                        width: calc(100% - 2rem) !important;
+                        gap: 0.875rem !important;
+                    }
+                    #totp-validator .totp-code-timer-grid {
+                        gap: 0.75rem !important;
+                        grid-template-columns: 1fr 1fr !important;
+                    }
+                    #totp-validator .totp-code-card,
+                    #totp-validator .totp-timer-card {
+                        padding: 0.75rem !important;
+                        gap: 0.25rem !important;
+                        border-radius: 0.5rem !important;
+                    }
+                    #totp-validator .totp-code-value {
+                        font-size: 1.4rem !important;
+                        letter-spacing: 0.2em !important;
+                    }
+                    #totp-validator .totp-timer-ring-wrapper {
+                        width: 2.5rem !important;
+                        height: 2.5rem !important;
+                    }
+                    #totp-validator .totp-timer-ring-wrapper svg {
+                        width: 40px !important;
+                        height: 40px !important;
+                    }
+                    #totp-validator .totp-timer-text {
+                        font-size: 0.85rem !important;
+                    }
+                    #totp-validator .totp-secret-code {
+                        font-size: 0.85rem !important;
+                        padding: 0.4rem 0.625rem !important;
+                    }
+                    #totp-validator .totp-input-row {
+                        gap: 0.5rem !important;
+                    }
+                    #totp-validator .totp-input-field {
+                        font-size: 1rem !important;
+                        height: 2.5rem !important;
+                        max-width: none !important;
+                    }
+                    #totp-validator .totp-result-bar {
+                        padding: 0.625rem 0.75rem !important;
+                        gap: 0.5rem !important;
+                    }
+                    #totp-validator .totp-result-icon {
+                        font-size: 1rem !important;
+                    }
+                    #totp-validator .totp-result-text {
+                        font-size: 0.8rem !important;
+                    }
+                    #totp-validator .totp-history-entry {
+                        font-size: 0.7rem !important;
+                        padding: 0.25rem 0.5rem !important;
+                    }
+                }
+            `}</style>
         </>
     );
 }
@@ -390,12 +710,13 @@ export default function FormsPage() {
 function SideNav() {
     const navRef = useRef<HTMLDivElement>(null);
     const sections = [
-        { id: 'section-1', label: 'Text Inputs' },
-        { id: 'section-2', label: 'Selection' },
-        { id: 'section-3', label: 'Date & Time' },
-        { id: 'section-4', label: 'Interactive' },
-        { id: 'section-5', label: 'OTP' },
-        { id: 'section-6', label: 'Links' },
+        { id: 'text-inputs', label: 'Text Inputs' },
+        { id: 'selection-controls', label: 'Selection' },
+        { id: 'date-time', label: 'Date & Time' },
+        { id: 'interactive-special', label: 'Interactive' },
+        { id: 'otp-verification', label: 'OTP' },
+        { id: 'links-vectors', label: 'Links' },
+        { id: 'totp-validator', label: 'TOTP' },
     ];
 
     const scrollTo = (id: string) => {
