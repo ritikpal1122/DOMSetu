@@ -92,6 +92,13 @@ export default function Home() {
           icon={<ShieldIcon />}
           onClick={() => handleCardClick("ChromePrefs")}
         />
+        <ScenarioCard
+          title="Device Settings"
+          description="Auto-detect device capabilities — GPS, orientation, network, timezone, permissions, and hardware."
+          href={buildHref("/device-settings")}
+          icon={<DeviceIcon />}
+          onClick={() => handleCardClick("DeviceSettings")}
+        />
       </div>
     </main>
   );
@@ -167,4 +174,7 @@ const CartIcon = () => (
 );
 const ShuffleIcon = () => (
   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="16 3 21 3 21 8" /><line x1="4" y1="20" x2="21" y2="3" /><polyline points="21 16 21 21 16 21" /><line x1="15" y1="15" x2="21" y2="21" /><line x1="4" y1="4" x2="9" y2="9" /></svg>
+);
+const DeviceIcon = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect x="5" y="2" width="14" height="20" rx="2" ry="2" /><line x1="12" y1="18" x2="12.01" y2="18" /></svg>
 );
